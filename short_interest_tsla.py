@@ -27,9 +27,9 @@ def get_short_prop(df):
     series = df['Proportion']
     return series
 
-tsla_shorts = quandl.get("FINRA/FNSQ_TSLA", authtoken="-h4jm8-epYp2YfshRaBA")
+tsla_shorts = quandl.get("FINRA/FNSQ_TSLA", authtoken="")
 
-goog_shorts = quandl.get("FINRA/FNSQ_GOOG", authtoken="-h4jm8-epYp2YfshRaBA")
+goog_shorts = quandl.get("FINRA/FNSQ_GOOG", authtoken="")
 
 #series = get_short_prop(goog_shorts)
 
