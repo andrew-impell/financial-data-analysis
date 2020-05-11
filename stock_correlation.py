@@ -1,3 +1,4 @@
+import scipy.stats as sp
 import os
 import numpy as np
 import matplotlib.pyplot as plt
@@ -30,10 +31,12 @@ def buy_stock(
     def buy(i, initial_money, current_inventory):
         shares = initial_money // real_movement[i]
         if shares < 1:
+            '''
             print(
                 'day %d: total balances %f, not enough money to buy a unit price %f'
                 % (i, initial_money, real_movement[i])
             )
+            '''
         else:
             if shares > max_buy:
                 buy_units = max_buy
@@ -41,10 +44,10 @@ def buy_stock(
                 buy_units = shares
             initial_money -= buy_units * real_movement[i]
             current_inventory += buy_units
-            print(
-                'day %d: buy %d units at price %f, total balance %f'
-                % (i, buy_units, buy_units * real_movement[i], initial_money)
-            )
+            # print(
+            #     'day %d: buy %d units at price %f, total balance %f'
+            #     % (i, buy_units, buy_units * real_movement[i], initial_money)
+            # )
             states_buy.append(0)
         return initial_money, current_inventory
 
@@ -57,7 +60,9 @@ def buy_stock(
             states_buy.append(i)
         elif state == -1:
             if current_inventory == 0:
+                '''
                 print('day %d: cannot sell anything, inventory 0' % (i))
+                '''
             else:
                 if current_inventory > max_sell:
                     sell_units = max_sell
@@ -73,10 +78,12 @@ def buy_stock(
                     ) * 100
                 except:
                     invest = 0
+                '''
                 print(
                     'day %d, sell %d units at price %f, investment %f %%, total balance %f,'
                     % (i, sell_units, total_sell, invest, initial_money)
                 )
+                '''
             states_sell.append(i)
 
     invest = ((initial_money - starting_money) / starting_money) * 100
@@ -137,13 +144,14 @@ plt.show()
 '''
 # Generate Negative Correlations
 
-HOW_NEG = 10
+HOW_NEG = 50
 neg = df.corr()
 negs = neg.unstack()
 negso = negs.sort_values(kind='quicksort')
 negso = negso[negso.values != -1.0].drop_duplicates()
+# negcorrelations = negso
 negcorrelations = negso[:HOW_NEG]
-
+'''
 negpairs = negcorrelations.index.shape[0]
 
 fig, axs = plt.subplots(negpairs, 1, sharex=True)
@@ -158,7 +166,7 @@ for first, second in negcorrelations.index:
     i += 1
 plt.show()
 
-'''
+
 # Generate Positive Correlations
 
 c = df.corr()
@@ -186,24 +194,40 @@ plt.show()
 '''
 
 
-def get_signals(ticker):
+def lin_regress(t):
+    x = np.arange(len(t))
+    slope, intercept, r_value, p_value, std_err = sp.linregress(x, t.T.values)
+    return slope
+
+
+def get_signals(ticker, ticker2, short, buy):
     '''
     Get a signals df from a ticker
     '''
-    short_cut_off = 0.00001
-    buy_cut_off = 0.001
+    short_cut_off = short
+    buy_cut_off = buy
 
-    count = int(np.ceil(len(df.loc[:, [ticker]]) * 0.1))
+    # count = int(np.ceil(len(df.loc[:, [ticker]]) * 0.1))
+    # find which to short and which to buy
+    t1 = df.loc[:, [ticker]]
+    t2 = df.loc[:, [ticker2]]
+    slope1 = lin_regress(t1)
+    slope2 = lin_regress(t2)
+    if slope1 > slope2:
+        short = False
+    else:
+        short = True
+
     signals = pd.DataFrame(index=df.loc[:, [ticker]].index)
     signals['signal'] = 0.0
     signals['trend'] = df.loc[:, [ticker]]
     signals['pct_change'] = signals['trend'].pct_change()
     signals['momentum'] = signals['pct_change'].rolling(10).mean() / 10
     if short:
-        signals.loc[signals['momentum'] < short_cut_off, 'signal'] = -1
-        signals.loc[signals['momentum'] > short_cut_off, 'signal'] = 1
+        signals.loc[signals['momentum'] < short_cut_off, 'signal'] = 0
+        signals.loc[signals['momentum'] > short_cut_off, 'signal'] = -1
     else:
-        signals.loc[signals['momentum'] < buy_cut_off, 'signal'] = -1
+        signals.loc[signals['momentum'] < buy_cut_off, 'signal'] = 0
         signals.loc[signals['momentum'] > buy_cut_off, 'signal'] = 1
     '''
     signals['RollingMax'] = (signals.trend.shift(1).rolling(count).max())
@@ -212,7 +236,45 @@ def get_signals(ticker):
     signals.loc[signals['RollingMin'] > signals.trend, 'signal'] = 1
     '''
 
-    return signals
+    return signals['signal']
 
 
-print(get_signals('AAPL')['signal'].describe())
+def opt_buyshort():
+
+    total_gain_list = []
+    best_gain = 0
+    avg_gain_list = []
+    for b in [1]:
+        for s in tqdm(np.arange(0, 0.1, 0.001)):
+            # for s in tqdm(np.arange(0, 0.001, 0.00001)):
+
+            for first, second in negcorrelations.index:
+                Fvals = df.loc[:, [first]].values
+
+                signal = get_signals(first, second, s, b)
+
+                states_buy, states_sell, total_gains, invest = buy_stock(Fvals, signal)
+
+                # temp_gain = float(total_gains[0])
+                total_gain_list.append(total_gains)
+
+            avg_gains = np.mean(total_gain_list)
+
+            avg_gain_list.append(avg_gains)
+            if best_gain == 0:
+                best_gain = avg_gains
+
+            if avg_gains > best_gain:
+                best_gain = avg_gains
+                best_s = s
+                best_b = 1
+
+    return best_s, best_b, avg_gain_list
+
+
+s, b, av = opt_buyshort()
+
+plt.plot(np.arange(0, 1, 0.01), av)
+plt.show()
+
+print(s, b)
