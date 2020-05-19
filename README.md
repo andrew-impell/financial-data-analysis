@@ -10,7 +10,7 @@ Find correlations between pairs and graph the highest
 
 # Hedge Fund Portfolio
 
-Use SEC 13F form data to create a portfolio of securities traded by hedge funds/institutional traders and then benchmark its returns against the S&P 500
+Use SEC 13F form data to create a portfolio of securities traded by hedge funds/institutional traders and then benchmark its returns against the S&P 500. Securities held more often by multiple funds are weighted higher.
 
 ![](https://github.com/andrew-impell/financial-data-analysis/blob/master/hedge_fund_picks.png)
 
