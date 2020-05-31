@@ -4,7 +4,7 @@ Random array of scripts to price securities, analyse market data, etc..
 # Correlation
 file: stock_correlation.py
 
-Find correlations between pairs and graph the highest 
+Find correlations between pairs and graph the highest.
 
 ![](https://github.com/andrew-impell/financial-data-analysis/blob/master/correlations.png)
 
@@ -19,5 +19,9 @@ Data from [Fintel](https://fintel.io)
 # Short Interest
 file: short_interest_tsla.py
 
-Use time series analysis to predict optimal exit and entry of short positions using FINRA/NASDAQ TRF Short Interest data from [Quandl](https://quandl.com)
+Use time series analysis to predict optimal exit and entry of short positions using FINRA/NASDAQ TRF Short Interest data from [Quandl](https://quandl.com).
 
+# Svensson Treasury Yield Model
+file: yield_model.py
+
+Regreeses Federal Reserve model parameters to predict futures values. Data can be found [here](https://www.federalreserve.gov/data/nominal-yield-curve.htm).
