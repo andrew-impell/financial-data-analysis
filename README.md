@@ -25,3 +25,11 @@ Use time series analysis to predict optimal exit and entry of short positions us
 file: yield_model.py
 
 Regreeses Federal Reserve model parameters to predict futures values. Data can be found [here](https://www.federalreserve.gov/data/nominal-yield-curve.htm).
+
+# Market News Sentiment
+file: sentiment_news.py
+
+Uses `newspaper` to grab headlines and uses the `flair` NLP library for sentiment analysis to find the overall positivity or negativity of the news. Will attempt to integrate it into trading strategies and asset pricing models.
+
+
+
