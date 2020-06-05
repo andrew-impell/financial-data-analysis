@@ -6,7 +6,7 @@ import numpy as np
 import flair
 from collections import Counter
 import os
-from datetime import date
+from datetime import date, time, datetime
 
 today = date.today()
 cwd = os.getcwd()
@@ -39,11 +39,13 @@ sites = [
 with open('good_links.pkl', 'rb') as f:
     sub_links = pickle.load(f)
 
-sites.append(sub_links)
+for sub in sub_links:
+    sites.append(sub)
+
 
 # Remove duplicates
-
 sites = list(set(sites))
+print(*sites, sep='\t\n')
 
 
 def isEnglish(s):
@@ -81,7 +83,6 @@ for site in sites:
             if isEnglish(cleaned) and cleaned != 'None':
                 if len(cleaned) > most_len:
                     papers.append(cleaned)
-        time.sleep(0.1)
     except Exception as e:
         print(e)
 
@@ -125,7 +126,6 @@ for article in papers:
     sentiment.append(sent)
     polarity.append(pol)
 
-    
 
 # Count number of each NEG or POS
 c = Counter(sentiment)
