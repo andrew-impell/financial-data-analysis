@@ -12,7 +12,7 @@ today = date.today()
 cwd = os.getcwd()
 
 flair_sentiment = flair.models.TextClassifier.load('en-sentiment')
-'''
+
 # Market Beat
 sites = [
     'https://www.nytimes.com/section/business',
@@ -33,7 +33,13 @@ sites = [
     'http://forbes.com',
     'https://www.thestreet.com/',
     'https://www.cnbc.com/stocks/'
-    ]
+]
+
+
+with open('good_links.pkl', 'rb') as f:
+    sub_links = pickle.load(f)
+
+sites.append(sub_links)
 
 
 def isEnglish(s):
@@ -44,6 +50,8 @@ def isEnglish(s):
     else:
         return True
 
+
+most_len = len(' Channels &amp; Frequencies')
 
 papers = []
 site_dict = {}
@@ -62,8 +70,9 @@ for site in sites:
             cleaned = raw_text.rstrip().strip()
             print('\t', cleaned)
             if isEnglish(cleaned) and cleaned != 'None':
-                papers.append(cleaned)
-        time.sleep(1)
+                if len(cleaned) > most_len:
+                    papers.append(cleaned)
+        time.sleep(0.1)
     except Exception as e:
         print(e)
 
@@ -72,9 +81,9 @@ fname = cwd + '/news/news_' + str(today) + '.pkl'
 
 with open(fname, 'wb') as f:
     pickle.dump(papers, f)
-'''
 
-with open('news.pkl', 'rb') as f:
+
+with open(fname, 'rb') as f:
     papers = pickle.load(f)
 
 print('Initial Length: ', str(len(papers)))
