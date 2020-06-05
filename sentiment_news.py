@@ -41,8 +41,13 @@ with open('good_links.pkl', 'rb') as f:
 
 sites.append(sub_links)
 
+# Remove duplicates
+
+sites = list(set(sites))
+
 
 def isEnglish(s):
+    # Determine if a string is written using english chars
     try:
         s.encode(encoding='utf-8').decode('ascii')
     except UnicodeDecodeError:
@@ -51,6 +56,7 @@ def isEnglish(s):
         return True
 
 
+# minimum length of headline
 most_len = len(' Channels &amp; Frequencies')
 
 papers = []
@@ -58,11 +64,14 @@ site_dict = {}
 
 for site in sites:
     try:
+        # Newpaper print out
         first, last = site.find('.'), site.rfind('.')
         print(f'\nGetting {site[first+1:last].capitalize()}...')
+        # Build the site
         paper = newspaper.build(site, language='en')
         articles = paper.articles
         print(f'[+] Articles: {len(articles)}\n')
+        # Parse each article
         for article in articles:
             article.download()
             article.parse()
@@ -76,6 +85,7 @@ for site in sites:
     except Exception as e:
         print(e)
 
+# Pickle the list of headlines
 
 fname = cwd + '/news/news_' + str(today) + '.pkl'
 
@@ -85,6 +95,9 @@ with open(fname, 'wb') as f:
 
 with open(fname, 'rb') as f:
     papers = pickle.load(f)
+
+
+# Clean the headline list
 
 print('Initial Length: ', str(len(papers)))
 
@@ -98,6 +111,7 @@ papers[:] = [x for x in papers if x]
 
 print('Length cleaned: ', str(len(papers)))
 
+# Perform NLP
 
 sentiment = []
 polarity = []
@@ -111,6 +125,9 @@ for article in papers:
     sentiment.append(sent)
     polarity.append(pol)
 
+    
+
+# Count number of each NEG or POS
 c = Counter(sentiment)
 total = sum(c.values())
 percent = {key: value/total * 100 for key, value in c.items()}
