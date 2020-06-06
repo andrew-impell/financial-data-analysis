@@ -28,7 +28,9 @@ Regreeses Federal Reserve model parameters to predict futures values. Data can b
 
 # Market News Sentiment
 file: sentiment_news.py
+
 helper files: process_sentiment.py, get_news_sites.py
+
 
 Uses `newspaper` to grab headlines and uses the `flair` NLP library for sentiment analysis to find the overall positivity or negativity of the news. Will attempt to integrate it into trading strategies and asset pricing models.
 
