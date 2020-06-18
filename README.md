@@ -25,7 +25,7 @@ Use time series analysis to predict optimal exit and entry of short positions us
 file: yield_model.py
 
 Regreeses Federal Reserve model parameters to predict futures values. Data can be found [here](https://www.federalreserve.gov/data/nominal-yield-curve.htm).
-
+anomalies
 # Market News Sentiment
 file: sentiment_news.py
 
@@ -34,5 +34,16 @@ helper files: process_sentiment.py, get_news_sites.py
 
 Uses `newspaper` to grab headlines and uses the `flair` NLP library for sentiment analysis to find the overall positivity or negativity of the news. Will attempt to integrate it into trading strategies and asset pricing models.
 
+# Anomaly Detection with Isolation Forest
 
+Looks at the Kaggle stock dataset to find patterns in the aggregate levels of anomalies over time. `prophet` is used to try to find a time series trend.
 
+![](https://github.com/andrew-impell/financial-data-analysis/blob/master/anom.png)
+ <p>Graph of the log(daily percent change) of a single security with in-sample outliers in red and out-of-sample outliers in green.</p>
+
+![](https://github.com/andrew-impell/financial-data-analysis/blob/master/index2.png)
+<p>Total of all outliers over time.</p>
+
+![](https://github.com/andrew-impell/financial-data-analysis/blob/master/prophet2.png)
+
+ <p> prophet model on the anomaly index.</p>
