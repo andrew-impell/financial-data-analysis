@@ -17,7 +17,7 @@ Use SEC 13F form data to create a portfolio of securities traded by hedge funds/
 Data from [Fintel](https://fintel.io)
 
 # Short Interest
-file: short_interest_tsla.py
+file: short_interest_tsla.pySP800-22 Rev 1a PRNG test suite
 
 Use time series analysis to predict optimal exit and entry of short positions using FINRA/NASDAQ TRF Short Interest data from [Quandl](https://quandl.com).
 
@@ -47,3 +47,48 @@ Looks at the Kaggle stock dataset to find patterns in the aggregate levels of an
 ![](https://github.com/andrew-impell/financial-data-analysis/blob/master/prophet2.png)
 
  <p> prophet model on the anomaly index.</p>
+ 
+ # NIST SP800-22 Rev 1a PRNG test suite analysis
+ file: random_test.py
+ 
+ 
+ Uses PRNG tests on log returns to try to test the randomness of market returns.
+ Requires [this](https://github.com/dj-on-github/sp800_22_tests) great repository for the NIST tests.
+ 
+ <b>Sample output:</b>
+ 
+ ```
+ /home/andrew/Documents/dev/econ/market_random/sp800_22_tests/sp800_22_random_excursion_test.py
+J=3
+x = -4	chisq = 0.428871	p = 0.994500 
+x = -3	chisq = 0.600144	p = 0.987997 
+x = -2	chisq = 1.000300	p = 0.962542 
+x = -1	chisq = 0.999700	p = 0.962590 
+x = 1	chisq = 4.333033	p = 0.502529 
+x = 2	chisq = 8.247775	p = 0.143099 
+x = 3	chisq = 0.600144	p = 0.987997 
+x = 4	chisq = 0.428871	p = 0.994500 
+J too small (J < 500) for result to be reliable
+success = True
+plist =  [0.9945000204954214, 0.9879969685847894, 0.9625415766568545, 0.9625899708254657, 0.5025287424472648, 0.14309859788329615, 0.9879969685847894, 0.9945000204954214]
+
+/home/andrew/Documents/dev/econ/market_random/sp800_22_tests/sp800_22_serial_test.py
+  psi_sq_m   =  2.8
+  psi_sq_mm1 =  1.2
+  psi_sq_mm2 =  0.4
+  delta1     =  1.6
+  delta2     =  0.8
+  P1         =  0.808792135411
+  P2         =  0.670320046036
+success = True
+plist =  [0.8087921354109985, 0.6703200460356384]
+
+/home/andrew/Documents/dev/econ/market_random/sp800_22_tests/sp800_22_maurers_universal_test.py
+  sum = 7.16992500144
+  fn = 1.19498750024
+success = True
+p       =  0.0314262987784
+
+etc...
+
+ ```
