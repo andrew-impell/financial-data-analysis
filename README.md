@@ -92,3 +92,9 @@ p       =  0.0314262987784
 etc...
 
  ```
+
+# Vector Autoregression on Tech Stocks
+
+main file: sp500_tech.py
+
+Creates a VAR model of 11 different tech stocks and predicts future price movement.
